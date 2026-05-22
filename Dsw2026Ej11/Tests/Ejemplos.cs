@@ -129,47 +129,36 @@ internal class Ejemplos
     public static void EjemploLinq()
     {
         Console.WriteLine("=== PROBANDO CASO LINQ ===");
-        CasoLinq casoLinq = new CasoLinq();
 
+        // Obtenemos los 30 libros reales del dominio
         List<Libro> listaLibros = Libro.CrearLista();
-        Console.WriteLine($"Se procesarán {listaLibros.Count} libros usando consultas LINQ.\n");
 
-        Console.WriteLine($"1. GetPrimero: {casoLinq.GetPrimero(listaLibros)?.Titulo}");
-        Console.WriteLine($"2. GetUltimo: {casoLinq.GetUltimo(listaLibros)?.Titulo}");
-        Console.WriteLine($"3. GetTotalPrecios: {casoLinq.GetTotalPrecios(listaLibros):C}");
+        // Instanciamos pasándole la lista al constructor tal como lo necesitás
+        CasoLinq casoLinq = new CasoLinq(listaLibros);
 
-        double promedio = casoLinq.GetPromedioPrecios(listaLibros);
-        Console.WriteLine($"4. GetPromedioPrecios: {promedio:C}");
+        // Llamadas a cada método e impresión por consola
+        Console.WriteLine($"1. Primer libro: {casoLinq.GetPrimero()?.Titulo ?? "N/A"}");
+        Console.WriteLine($"2. Último libro: {casoLinq.GetUltimo()?.Titulo ?? "N/A"}");
+        Console.WriteLine($"3. Suma de precios: {casoLinq.GetTotalPrecios():C}");
+        Console.WriteLine($"4. Promedio de precios: {casoLinq.GetPromedioPrecios():C}");
 
-        Console.WriteLine("\n5. GetListById (Libros con ID > 15 - Muestra de los 3 primeros):");
-        var porId = casoLinq.GetListById(listaLibros);
-        for (int i = 0; i < Math.Min(3, porId.Count); i++)
-        {
-            Console.WriteLine($"   - [ID: {porId[i].Id}] {porId[i].Titulo}");
-        }
+        Console.WriteLine("\nLibros con Id > 15:");
+        foreach (var libro in casoLinq.GetListById())
+            Console.WriteLine($"   - {libro.Titulo} (Id: {libro.Id})");
 
-        Console.WriteLine("\n6. GetLibros (Lista de strings en formato moneda - Primeros 3):");
-        var formateados = casoLinq.GetLibros(listaLibros);
-        for (int i = 0; i < Math.Min(3, formateados.Count); i++)
-        {
-            Console.WriteLine($"   - {formateados[i]}");
-        }
+        Console.WriteLine("\nLibros formato moneda:");
+        foreach (var texto in casoLinq.GetLibros())
+            Console.WriteLine($"   - {texto}");
 
-        Console.WriteLine($"\n7. GetMayorPrecio: {casoLinq.GetMayorPrecio(listaLibros)?.Titulo} ({casoLinq.GetMayorPrecio(listaLibros)?.Precio:C})");
-        Console.WriteLine($"8. GetMenorPrecio: {casoLinq.GetMenorPrecio(listaLibros)?.Titulo} ({casoLinq.GetMenorPrecio(listaLibros)?.Precio:C})");
+        Console.WriteLine($"\nLibro con mayor precio: {casoLinq.GetMayorPrecio()?.Titulo} ({casoLinq.GetMayorPrecio()?.Precio:C})");
+        Console.WriteLine($"8. Libro con menor precio: {casoLinq.GetMenorPrecio()?.Titulo} ({casoLinq.GetMenorPrecio()?.Precio:C})");
 
-        Console.WriteLine($"\n9. GetMayorPromedio (Libros caros que superan el promedio de {promedio:C} - Muestra de 3):");
-        var mayorProm = casoLinq.GetMayorPromedio(listaLibros);
-        for (int i = 0; i < Math.Min(3, mayorProm.Count); i++)
-        {
-            Console.WriteLine($"   - {mayorProm[i].Titulo} ({mayorProm[i].Precio:C})");
-        }
+        Console.WriteLine("\nLibros con precio > promedio:");
+        foreach (var libro in casoLinq.GetMayorPromedio())
+            Console.WriteLine($"   - {libro.Titulo}");
 
-        Console.WriteLine("\n10. Libros ordenados por título desc (Z a A - Muestra de 3):");
-        var ordenados = casoLinq.GetLibrosOrdenadosPorTituloDesc(listaLibros);
-        for (int i = 0; i < Math.Min(3, ordenados.Count); i++)
-        {
-            Console.WriteLine($"    - {ordenados[i].Titulo}");
-        }
+        Console.WriteLine("\nLibros ordenados descendente:");
+        foreach (var libro in casoLinq.GetLibrosOrdenados())
+            Console.WriteLine($"   - {libro.Titulo}");
     }
 }
